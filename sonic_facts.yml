@@ -9,14 +9,35 @@
         gather_subset: min
         gather_network_resources:
           - interfaces
+          - l2_interfaces
           - l3_interfaces
           - lag_interfaces
           - vlans
           - bgp
       register: result
 
-    - name: "Debug facts"
+    - name: "Debug interfaces facts"
       ansible.builtin.debug:
-        msg: "{{ result.ansible_facts.ansible_network_resources }}"
+        msg: "{{ result.ansible_facts.ansible_network_resources.interfaces }}"
 
+    - name: "Debug l2_interfaces facts"
+      ansible.builtin.debug:
+        msg: "{{ result.ansible_facts.ansible_network_resources.l2_interfaces }}"
+
+    - name: "Debug L3 interfaces facts"
+      ansible.builtin.debug:
+        msg: "{{ result.ansible_facts.ansible_network_resources.l3_interfaces }}"
+
+    - name: "Debug LAG interfaces facts"
+      ansible.builtin.debug:
+        msg: "{{ result.ansible_facts.ansible_network_resources.lag_interfaces }}"
+
+    - name: "Debug VLAN facts"
+      ansible.builtin.debug:
+        msg: "{{ result.ansible_facts.ansible_network_resources.vlans }}"
+
+    - name: "Debug BGP facts"
+      ansible.builtin.debug:
+        msg: "{{ result.ansible_facts.ansible_network_resources.bgp }}"
+          
 ...
