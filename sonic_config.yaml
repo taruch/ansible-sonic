@@ -1,0 +1,34 @@
+---
+- name: "Configure a SONiC device"
+  hosts: sonic_devices
+  connection: network_cli
+  gather_facts: false
+  vars:
+    ansible_connection: network_cli
+    ansible_network_os: dellemc.enterprise_sonic.sonic
+
+  tasks:
+    - name: "Configure SNMP community for SONiC device along with 'save'"
+      dellemc.enterprise_sonic.sonic_config:
+        commands: ['snmp-server community public group ro']
+        save: true
+
+    - name: "Configure interface description using 'parents' option on SONiC device"
+      dellemc.enterprise_sonic.sonic_config:
+        lines:
+          - description hi
+        parents: ['interface Eth4']
+
+    - name: "Configure bgp using multiple level 'parents' on SONiC device"
+      dellemc.enterprise_sonic.sonic_config:
+        lines:
+          - maximum-paths 4
+        parents: ['router bgp 4', 'address-family ipv4 unicast']
+
+    - name: "Configure ip access-list using 'before' and 'after' option on SONiC device"
+      dellemc.enterprise_sonic.sonic_config:
+        lines:
+          - seq 1 permit tcp any any ack
+        parents: ['ip access-list test']
+        before: ['no ip access-list test']
+        after: ['no ip access-list test']
