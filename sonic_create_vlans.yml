@@ -1,0 +1,24 @@
+---
+- name: Create New VLANs on SONiC
+  hosts: sonic_devices
+  gather_facts: false
+
+  tasks:
+    - name: Create Web and DB VLANs
+      dellemc.enterprise_sonic.sonic_vlans:
+        config:
+          # --- 'name:' parameter removed ---
+          - vlan_id: 100
+            description: "Web-Servers"
+          # --- 'name:' parameter removed ---
+          - vlan_id: 200
+            description: "DB-Servers"
+            
+        # 'merged' ensures these VLANs are present.
+        state: merged
+      
+      register: vlan_result
+
+    - name: Display VLAN creation results
+      ansible.builtin.debug:
+        msg: "{{ vlan_result }}"
