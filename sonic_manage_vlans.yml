@@ -1,0 +1,29 @@
+---
+- name: Create New VLANs on SONiC
+  hosts: sonic_devices
+  gather_facts: false
+
+  tasks:
+    - name: Manage VLANs
+      tags: always
+      dellemc.enterprise_sonic.sonic_vlans:
+        config: "{{ vlans }}"
+        state: merged
+      
+      register: vlan_result
+
+    - name: Display VLAN creation results
+      tags: always
+      ansible.builtin.debug:
+        msg: "{{ vlan_result }}"
+
+
+    - name: Create Web and DB VLANs
+      tags: 
+        - deleted
+        - never
+      dellemc.enterprise_sonic.sonic_vlans:
+        config:
+          - vlan_id: 13        
+        # 'merged' ensures these VLANs are deleted.
+        state: deleted
