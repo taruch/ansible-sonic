@@ -1,0 +1,31 @@
+---
+- name: Add Interfaces to VLANs
+  hosts: sonic_devices
+  gather_facts: false
+
+  tasks:
+    - name: Configure interface L2 (VLAN) properties
+      dellemc.enterprise_sonic.sonic_l2_interfaces:
+        config: "{{ l2_interfaces }}"
+        state: merged
+      register: interface_result
+
+    - name: Display interface configuration results
+      ansible.builtin.debug:
+        msg: "{{ interface_result }}"
+
+
+    # - name: Configure interface L2 (VLAN) properties
+    #   dellemc.enterprise_sonic.sonic_l2_interfaces:
+    #     config:
+    #       - name: Eth3
+    #         access:
+    #           vlan: 100
+    #     state: merged
+    #   register: interface_result
+
+    # - name: Display interface configuration results
+    #   ansible.builtin.debug:
+    #     msg: "{{ interface_result }}"
+
+...
