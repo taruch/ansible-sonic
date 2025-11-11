@@ -1,0 +1,74 @@
+---
+- name: Ansible resource module example
+  hosts: sonic_devices
+  gather_facts: false
+  connection: httpapi
+  tasks:
+    - name: Sonic_interfaces configuration
+      dellemc.enterprise_sonic.sonic_interfaces:
+        config:
+          - name: Loopback91
+            enabled: false
+          - name: Loopback100
+            description: "hi loopback"
+            enabled: false
+          - name: Eth12
+            description: "hi test"
+            enabled: false
+          - name: Eth13
+            description: "hi ans"
+            enabled: false
+    - name: Add VLANs
+      dellemc.enterprise_sonic.sonic_vlans:
+        config:
+          - vlan_id: 11
+          - vlan_id: 12
+          - vlan_id: 13
+        state: merged
+    - name: Sonic_l2_interfaces configuration
+      dellemc.enterprise_sonic.sonic_l2_interfaces:
+        config:
+          - name: Eth12
+            access:
+              vlan: 12
+          - name: Eth13
+            access:
+              vlan: 11
+            trunk:
+              allowed_vlans:
+                - vlan: 12
+                - vlan: 13
+        state: merged
+    # - name: Sonic_lag_interfaces configuration
+    #   dellemc.enterprise_sonic.sonic_lag_interfaces:
+    #     config:
+    #       - name: PortChannel12
+    #         members:
+    #           interfaces:
+    #             - member: Eth20
+    #             - member: Eth21
+    #       - name: PortChannel1
+    #         members:
+    #           interfaces:
+    #             - member: Eth22
+    #     state: merged
+    - name: Sonic_l3_interfaces configuration
+      dellemc.enterprise_sonic.sonic_l3_interfaces:
+        config:
+          - name: Loopback100
+            ipv4:
+              addresses:
+                - address: 101.1.1.1/32
+          - name: vlan 11
+            ipv6:
+              addresses:
+                - address: 150::1/16
+          # - name: po 12
+          #   ipv4:
+          #     addresses:
+          #       - address: 180.1.1.1/16
+          - name: Eth24
+            ipv6:
+              enabled: true
+
+...
