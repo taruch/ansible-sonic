@@ -11,12 +11,14 @@
       dellemc.enterprise_sonic.sonic_command:
         commands: 'show interface status'
       register: cmd_op
+
     - name: Test SONiC single command with wait_for
       dellemc.enterprise_sonic.sonic_command:
         commands: 'show version'
         wait_for:
           - result[0] contains Del
       register: cmd_op
+
     - name: Test SONiC multiple command with wait_for
       dellemc.enterprise_sonic.sonic_command:
         commands:
@@ -26,6 +28,7 @@
           - result[0] contains Dell
           - result[1] contains Hostname
       register: cmd_op
+
     - name: Test SONiC commands with wait_for negative case
       dellemc.enterprise_sonic.sonic_command:
         commands:
@@ -36,6 +39,7 @@
           - result[1] contains Hostname
       register: cmd_op
       ignore_errors: true
+
     - name: Test SONiC commands with wait_for and match=any
       dellemc.enterprise_sonic.sonic_command:
         commands:
@@ -48,6 +52,7 @@
         retries: 3
         interval: 2
       register: cmd_op
+
     - name: Test SONiC command with prompt handling
       dellemc.enterprise_sonic.sonic_command:
         commands:
